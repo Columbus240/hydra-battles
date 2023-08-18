@@ -20,7 +20,6 @@ Set Implicit Arguments.
 
 #[global] Hint Unfold In : schutte.
 Arguments Included [U] _ _.
-Arguments countable [U] _.
 Arguments Same_set [U] _ _.
 
 Delimit Scope schutte_scope with sch.
@@ -36,7 +35,7 @@ Parameter Ord : Type.
 Parameter lt : relation Ord.
 Infix "<" := lt : schutte_scope.
 
-Definition ordinal : Ensemble Ord := Full_set Ord.
+Definition ordinal : Ensemble Ord := Full_set.
 Definition big0 alpha : Ensemble Ord := fun beta =>  beta < alpha.
 
 #[global] Hint Unfold ordinal : schutte.
@@ -209,7 +208,7 @@ Definition progressive (P : Ord -> Prop) : Prop :=
 (* begin snippet ClosedDef *)
 
 Definition Closed (B : Ensemble Ord) : Prop := 
-  forall M, Included M B -> Inhabited _ M -> countable M ->
+  forall M, Included M B -> Inhabited M -> countable M ->
                             In B (|_| M).
 
 (* end snippet ClosedDef *)
@@ -217,7 +216,7 @@ Definition Closed (B : Ensemble Ord) : Prop :=
 Definition  continuous (f:Ord->Ord)(A B : Ensemble Ord) : Prop :=
   fun_codomain A B f /\
   Closed A /\
-  (forall U, Included U A -> Inhabited _ U -> 
+  (forall U, Included U A -> Inhabited U -> 
              countable U -> |_| (image U f) = f (|_| U)).
 
 
@@ -376,7 +375,7 @@ Qed.
 (** ** Global properties *)
 
 
-Theorem Non_denum : ~ countable (Full_set Ord).
+Theorem Non_denum : ~ countable (@Full_set Ord).
 Proof.
   red; intro H; case (AX3  H); auto.
   intros x H0; case (@lt_irrefl x);apply H0; split.
@@ -384,7 +383,7 @@ Qed.
 
 
 
-Lemma Inh_ord : Inhabited _ ordinal.
+Lemma Inh_ord : Inhabited ordinal.
 Proof.
   destruct inh_Ord as [x];  exists x; split.
 Qed.
@@ -398,7 +397,7 @@ Proof.
     unfold X0, Included, In; intuition.
     now exists alpha.  
   }
-  pose (X:= Add  _ X0 alpha).
+  pose (X:= Add X0 alpha).
   assert (countable X). 
   {  unfold X; unfold Add; apply countable_union.
      auto.
@@ -413,7 +412,7 @@ Proof.
 Qed.
 
 
-Lemma the_least_ok : forall X, Inhabited Ord X -> 
+Lemma the_least_ok : forall X, Inhabited X -> 
                                forall a, In X a -> the_least X <= a.
 Proof.
   intros X H a H0;   pattern X, (the_least X).
@@ -477,7 +476,7 @@ Proof. (* .no-out *)
   (* begin snippet succOkb *)
 
   (*| .. coq:: no-out |*)
-  destruct (@AX3 (Singleton _ alpha)).
+  destruct (@AX3 (Singleton alpha)).
   - apply countable_singleton.
   - unfold succ_spec; apply the_least_unicity; exists x; intuition.
 Qed.     
@@ -842,7 +841,7 @@ Qed.
 
 
 Lemma seq_mono_inj (s : nat -> Ord) :
-  seq_mono s -> injective _ _ s. 
+  seq_mono s -> injective s. 
 Proof.
   unfold injective;intros  H i j H0.
   case (lt_eq_lt_dec i j).
@@ -856,7 +855,7 @@ Qed.
 #[global] Hint Resolve Countable.seq_range_countable seq_mono_intro : schutte.
 
 
-Lemma In_full {A:Type} (a:A) : In (Full_set A ) a.
+Lemma In_full {A:Type} (a:A) : In (@Full_set A ) a.
 Proof. split. Qed.
 
 #[global] Hint Resolve In_full: core.
@@ -1134,7 +1133,7 @@ Qed.
 (* begin snippet BadBottoma:: no-out *)
 Module Bad.
   
-  Definition bottom := the_least (Empty_set Ord).
+  Definition bottom := the_least (@Empty_set Ord).
 (* end snippet BadBottoma *)
 
   (* begin snippet trivialProps:: no-out *) 
@@ -1155,56 +1154,3 @@ End Bad.
 (* end snippet Failure *)
 
 End iota_demo.
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
- 
- 
- 
- 
-
-
-
-
-
-
-
-
- 
- 
-
-
- 
- 
- 
- 
-
-
-
-
-
-
-
-
-
-
- 
- 
- 
-
- 
- 
- 
- 

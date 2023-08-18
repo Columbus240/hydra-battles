@@ -9,7 +9,7 @@ From Coq Require Import Ensembles Image Compare_dec.
 
 
 Definition Infinite {A: Type} (E: Ensemble A) :=
-  exists s: nat -> A, injective nat A s /\ forall i, In  E (s i).
+  exists s: nat -> A, injective s /\ forall i, In  E (s i).
 
 Section On_alpha.
 
@@ -50,7 +50,7 @@ Section On_alpha.
     Qed.
 
     
-    Lemma L3: injective _ _ s.
+    Lemma L3: injective s.
       assert (mono: forall i j, i < j -> s i t1< s j).      
       {
         induction 1.
@@ -108,4 +108,3 @@ Section On_alpha.
   Qed.
   
 End On_alpha.
-
